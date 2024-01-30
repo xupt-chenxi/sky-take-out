@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "sky.jwt")
+@ConfigurationProperties(prefix = "sky.jwt") // 用于读取配置文件，并映射到bean对象中，prefix用于设置配置文件中需要映射属性的统一前缀
 @Data
 public class JwtProperties {
 

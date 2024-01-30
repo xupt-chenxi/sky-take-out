@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 @Data
-@Builder
+@Builder // Lombok注解，用于生成对象
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(description = "员工登录返回的数据格式")
+// 实现接口Serializable，表示该类可序列化
 public class EmployeeLoginVO implements Serializable {
 
     @ApiModelProperty("主键值")
