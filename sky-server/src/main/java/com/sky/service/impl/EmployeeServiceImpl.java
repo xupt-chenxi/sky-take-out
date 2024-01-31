@@ -81,11 +81,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 拷贝后，employ对象中仍有些值为空，单独进行设置，未将值写死，使用了常量类的方式
         employee.setStatus(StatusConstant.ENABLE); // 设置账号状态，1为正常，0为异常
         employee.setPassword(PasswordConstant.DEFAULT_PASSWORD); // 设置账号默认密码：123456
-        employee.setCreateTime(LocalDateTime.now()); // 设置账号创建时间
-        employee.setUpdateTime(LocalDateTime.now()); // 设置账号更新时间
-        // 通过ThreadLocal取出当前登录账号的id并进行设置
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setCreateTime(LocalDateTime.now()); // 设置账号创建时间
+//        employee.setUpdateTime(LocalDateTime.now()); // 设置账号更新时间
+//        // 通过ThreadLocal取出当前登录账号的id并进行设置
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.save(employee);
     }
@@ -144,8 +144,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.update(employee);
     }
 }
