@@ -30,7 +30,7 @@ public class SetmealDish implements Serializable {
     //菜品名称 （冗余字段）
     private String name;
 
-    //菜品原价
+    //菜品原价（冗余字段）
     private BigDecimal price;
 
     //份数

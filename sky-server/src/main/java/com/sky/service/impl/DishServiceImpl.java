@@ -151,4 +151,19 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.insertBatch(flavors);
         }
     }
+
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    // TODO 个人直接通过categoryId进行查询，修改了黑马通过dish动态查询的方法
+    public List<Dish> list(Long categoryId) {
+//        Dish dish = Dish.builder()
+//                .categoryId(categoryId)
+//                .status(StatusConstant.ENABLE)
+//                .build();
+//        return dishMapper.list(dish);
+        return dishMapper.list(categoryId);
+    }
 }
