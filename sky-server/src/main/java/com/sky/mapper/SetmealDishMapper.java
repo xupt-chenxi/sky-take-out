@@ -10,11 +10,11 @@ import java.util.List;
 @Mapper
 public interface SetmealDishMapper {
     /**
-     * 根据要删除的菜品id查询套餐表中是否含有套餐与要删除的菜品关联
-     * @param ids
+     * 根据要删除的菜品id查询套餐菜品关联表中是否含有套餐与要删除的菜品关联
+     * @param dishIds
      * @return
      */
-    List<Long> seleteByDeleteIds(List<Long> ids);
+    List<Long> seleteByDeleteIds(List<Long> dishIds);
 
     /**
      * 批量保存套餐和菜品的关联关系

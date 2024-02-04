@@ -4,8 +4,8 @@
 <mapper namespace="com.sky.mapper.SetmealDishMapper">
     <select id="seleteByDeleteIds" resultType="Long">
         select id from setmeal_dish where dish_id in
-        <foreach collection="ids" item="id" separator="," open="(" close=")">
-            #{id}
+        <foreach collection="dishIds" item="dishId" separator="," open="(" close=")">
+            #{dishId}
         </foreach>
     </select>
 
