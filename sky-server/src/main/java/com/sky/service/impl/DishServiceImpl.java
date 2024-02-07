@@ -18,11 +18,14 @@ import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.beans.Transient;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -33,6 +36,8 @@ public class DishServiceImpl implements DishService {
     private DishFlavorMapper dishFlavorMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 向菜品表以及口味表中插入数据
@@ -42,6 +47,8 @@ public class DishServiceImpl implements DishService {
     @Override
     @Transactional
     public void saveWithFlavor(DishDTO dishDTO) {
+        // 删除缓存数据
+        claeanCache("dish_" + dishDTO.getCategoryId().toString());
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);
         // 向菜品表插入一条数据
@@ -78,6 +85,7 @@ public class DishServiceImpl implements DishService {
     @Override
     @Transactional
     public void deleteBatch(List<Long> ids) {
+        claeanCache("dish_*");
         // 判断当前菜品是否能删除 -- 是否存在起售中的产品
         for (Long id : ids) {
             Dish dish = dishMapper.selectById(id);
@@ -131,6 +139,7 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     public void updateWithFlavor(DishDTO dishDTO) {
+        claeanCache("dish_*");
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);
         // 修改菜品数据
@@ -165,5 +174,49 @@ public class DishServiceImpl implements DishService {
 //                .build();
 //        return dishMapper.list(dish);
         return dishMapper.list(categoryId);
+    }
+
+    /**
+     * 条件查询菜品和口味
+     * @param categoryId
+     * @return
+     */
+    public List<DishVO> listWithFlavor(Long categoryId) {
+        List<Dish> dishList = dishMapper.list(categoryId);
+
+        List<DishVO> dishVOList = new ArrayList<>();
+
+        for (Dish d : dishList) {
+            DishVO dishVO = new DishVO();
+            BeanUtils.copyProperties(d,dishVO);
+
+            //根据菜品id查询对应的口味
+            List<DishFlavor> flavors = dishFlavorMapper.selectByDishId(d.getId());
+
+            dishVO.setFlavors(flavors);
+            dishVOList.add(dishVO);
+        }
+
+        return dishVOList;
+    }
+
+    /**
+     * 设置菜品停售起售
+     * @param status
+     * @param id
+     */
+    @Override
+    public void setStatus(Integer status, Long id) {
+        claeanCache("dish_*");
+        dishMapper.setStatus(status, id);
+    }
+
+    /**
+     * 根据pattern从Redis中删除相关的key
+     * @param pattern
+     */
+    private void claeanCache(String pattern) {
+        Set keys = redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
     }
 }

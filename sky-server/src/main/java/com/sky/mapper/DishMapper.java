@@ -9,6 +9,7 @@ import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -67,12 +68,12 @@ public interface DishMapper {
     void update(Dish dish);
 
     /**
-     * 动态条件查询菜品
+     * 根据分类id查询起售中的菜品
      * @param
      * @return
      */
 //    List<Dish> list(Dish dish);
-    @Select("select * from dish where category_id = #{categoryId}")
+    @Select("select * from dish where category_id = #{categoryId} and status = 1")
     List<Dish> list(Long categoryId);
 
     /**
@@ -82,4 +83,12 @@ public interface DishMapper {
      */
     @Select("select a.* from dish a left join setmeal_dish b on a.id = b.dish_id where b.setmeal_id = #{setmealId}")
     List<Dish> getBySetmealId(Long setmealId);
+
+    /**
+     * 设置菜品停售起售
+     * @param status
+     * @param id
+     */
+    @Update("update dish set status = #{status} where id = #{id}")
+    void setStatus(Integer status, Long id);
 }
